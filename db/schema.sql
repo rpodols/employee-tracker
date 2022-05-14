@@ -5,13 +5,13 @@ USE employee_tracker_db;
 
 CREATE TABLE departments(
   dept_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  dept_name VARCHAR(40) NOT NULL
+  dept_name VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE roles(
   role_id INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  role_name VARCHAR(40) NOT NULL,
-  salary INTEGER NOT NULL,
+  role_name VARCHAR(30) NOT NULL,
+  salary DECIMAL NOT NULL,
   dept INTEGER NOT NULL,
   FOREIGN KEY (dept) REFERENCES departments(dept_id)
 );

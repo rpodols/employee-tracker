@@ -11,7 +11,6 @@ const db = mysql.createConnection(
     console.log(`Connected to the employee_tracker_db database.`)
   );
 
-//sets up db connection
 db.connect(function(err) {
 if (err) {
     return console.error('error: ' + err.message);
@@ -27,7 +26,7 @@ const mainMenu = () => {
             type: 'list',
             name: 'mainMenu',
             message: 'Please choose an option below: ',
-            choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role']
+            choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role', 'Quit']
         }
     ]).then((data) => {
         if (data.mainMenu === 'View all Departments') {
@@ -44,6 +43,9 @@ const mainMenu = () => {
             return addEmployee();
         } if (data.mainMenu === 'Update an Employee Role') {
             return updateEmployeeRole();
+        } if (data.mainMenu === 'Quit') {
+            console.log("Thank you for using the Employee Tracker!");
+            process.exit(0);
         }
     });
 };
@@ -63,7 +65,6 @@ const viewAll = (table) => {
     
         mainMenu();
       });
-
 };
 
 const addDepartment = () => {
@@ -202,4 +203,64 @@ const addEmployee = () => {
     });
     });
     });
+};
+
+const updateEmployeeRole = () => {
+    const roleList = [];
+    db.query("SELECT * FROM roles", (err, res) => {
+        if (err) throw err;
+
+        res.forEach(role => {
+            let roleObj = {
+                name: role.role_name,
+                value: role.role_id
+            }
+            roleList.push(roleObj);
+        });
+    
+    const employeeList = [
+        {
+            name: 'None',
+            value: null
+        }
+    ];
+    db.query("SELECT * FROM employees", (err, res) => {
+        if (err) throw err;
+
+        res.forEach( ({ first_name, last_name, employee_id }) => {
+            let employeeObj = {
+                name: first_name + " " + last_name,
+                value: employee_id
+            }
+            employeeList.push(employeeObj);
+        });
+
+    return inquirer
+    .prompt([
+        {
+            type: "list",
+            name: "employees",
+            choices: employeeList,
+            message: "Please choose an employee to update their role: "
+        },
+        {
+            type: "list",
+            name: "role",
+            choices: roleList,
+            message: "Please choose the employee's new role: "
+        }
+    ])
+    .then(response => {
+        const updateRole = `UPDATE employees SET job_title=(?) WHERE employee_id=(?)`;
+        db.query(updateRole, [response.role, response.employees], (err, res) => {
+            if (err) throw err;
+            console.log(`Role successfully updated.`);
+            mainMenu();
+        });
+    })
+    .catch(err => {
+        console.error(err);
+    });
+    });
+});
 };
