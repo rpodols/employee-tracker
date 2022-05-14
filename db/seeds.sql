@@ -7,7 +7,7 @@ VALUES
 
 INSERT INTO roles (role_name, salary, dept) 
 VALUES
-  ("Journeyman", 1, 1),
-  ("Apprentice", 2, 2),
-  ("Bricklayer", 3, 3),
-  ("Electrician", 4, 4);
+  ("Journeyman", 10000, 1),
+  ("Apprentice", 20000, 2),
+  ("Bricklayer", 30000, 3),
+  ("Electrician", 40000, 4);

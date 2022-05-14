@@ -1,5 +1,20 @@
 const inquirer = require('inquirer');
 const mysql = require('mysql2');
+const cTable = require('console.table');
+var figlet = require('figlet');
+
+const welcome = figlet.text('Employee Tracker', {
+    font: 'ANSI Regular',
+}, function(err, data) {
+    if (err) {
+        console.log(err);
+        return;
+    }
+    console.log(`==========================================================================================================================================
+
+${data}
+==========================================================================================================================================`)
+});
 
 const db = mysql.createConnection(
     {
@@ -8,14 +23,13 @@ const db = mysql.createConnection(
       password: '',
       database: 'employee_tracker_db'
     },
-    console.log(`Connected to the employee_tracker_db database.`)
+    welcome
   );
 
 db.connect(function(err) {
 if (err) {
     return console.error('error: ' + err.message);
 }
-console.log('Connected to the MySQL server.');
 mainMenu();
 });
 
@@ -26,7 +40,7 @@ const mainMenu = () => {
             type: 'list',
             name: 'mainMenu',
             message: 'Please choose an option below: ',
-            choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role', 'Quit']
+            choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role', 'Delete an Employee', 'Update Employee Manager', 'Quit']
         }
     ]).then((data) => {
         if (data.mainMenu === 'View all Departments') {
@@ -43,6 +57,10 @@ const mainMenu = () => {
             return addEmployee();
         } if (data.mainMenu === 'Update an Employee Role') {
             return updateEmployeeRole();
+        } if (data.mainMenu === 'Update Employee Manager') {
+            return updateManager();
+        } if (data.mainMenu === 'Delete an Employee') {
+            return deleteEmployee();
         } if (data.mainMenu === 'Quit') {
             console.log("Thank you for using the Employee Tracker!");
             process.exit(0);
@@ -53,11 +71,11 @@ const mainMenu = () => {
 const viewAll = (table) => {
     let filter = "";
     if (table === "departments") {
-        filter = `SELECT * FROM departments`;
+        filter = `SELECT dept_id AS ID, dept_name AS Deptartment_Name FROM departments`;
     } else if (table === "roles") {
-        filter = `SELECT * FROM roles`;
+        filter = `SELECT role_id AS ID, role_name AS Role_Title, salary AS Salary, dept_name AS Department FROM roles JOIN departments ON dept = departments.dept_id`;
     } else {
-        filter = `SELECT * FROM employees`;
+        filter = `SELECT employees.employee_id AS ID, employees.first_name AS First_Name, employees.last_name AS Last_Name, role_name AS Role_Title, dept_name AS Department, salary AS Salary, CONCAT(man.first_name, " ", man.last_name) AS Manager FROM employees LEFT JOIN roles on job_title = roles.role_id LEFT JOIN departments ON roles.dept = departments.dept_id LEFT JOIN employees AS man on employees.manager = man.employee_id;`;
     }
     db.query(filter, (err, res) => {
         if (err) throw err;
@@ -188,7 +206,7 @@ const addEmployee = () => {
             name: "manager",
             choices: employeeList,
             message: "Please choose the employee's manager: "
-        },
+        }
     ])
     .then(response => {
         const newEmployee = `INSERT INTO employees (first_name, last_name, job_title, manager) VALUES (?)`;
@@ -218,12 +236,7 @@ const updateEmployeeRole = () => {
             roleList.push(roleObj);
         });
     
-    const employeeList = [
-        {
-            name: 'None',
-            value: null
-        }
-    ];
+    const employeeList = [];
     db.query("SELECT * FROM employees", (err, res) => {
         if (err) throw err;
 
@@ -263,4 +276,83 @@ const updateEmployeeRole = () => {
     });
     });
 });
+};
+
+const deleteEmployee = () => {
+    const employeeList = [];
+    db.query("SELECT * FROM employees", (err, res) => {
+        if (err) throw err;
+
+        res.forEach( ({ first_name, last_name, employee_id }) => {
+            let employeeObj = {
+                name: first_name + " " + last_name,
+                value: employee_id
+            }
+            employeeList.push(employeeObj);
+        });
+
+    return inquirer
+    .prompt([
+        {
+            type: "list",
+            name: "employees",
+            choices: employeeList,
+            message: "Please choose an employee to delete from the database: "
+        }
+    ])
+    .then(response => {
+        const removeEmployee = `DELETE FROM employees WHERE employee_id=?`;
+        db.query(removeEmployee, [response.employees], (err, res) => {
+            if (err) throw err;
+            console.log(`Employee successfully deleted.`);
+            mainMenu();
+        });
+    })
+    .catch(err => {
+        console.error(err);
+    });
+    });
+};
+
+const updateManager = () => {
+    
+    const employeeList = [];
+    db.query("SELECT * FROM employees", (err, res) => {
+        if (err) throw err;
+
+        res.forEach( ({ first_name, last_name, employee_id }) => {
+            let employeeObj = {
+                name: first_name + " " + last_name,
+                value: employee_id
+            }
+            employeeList.push(employeeObj);
+        });
+
+    return inquirer
+    .prompt([
+        {
+            type: "list",
+            name: "employees",
+            choices: employeeList,
+            message: "Please choose an employee to update their manager: "
+        },
+        {
+            type: "list",
+            name: "manager",
+            choices: employeeList,
+            message: "Please choose the employee's new manager: "
+        }
+    ])
+    .then(response => {
+        const updateManager = `UPDATE employees SET manager=(?) WHERE employee_id=(?)`;
+        db.query(updateManager, [response.manager, response.employees], (err, res) => {
+            if (err) throw err;
+            console.log(`Manager successfully updated.`);
+            mainMenu();
+        });
+    })
+    .catch(err => {
+        console.error(err);
+    });
+    });
 };
