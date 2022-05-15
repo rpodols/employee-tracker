@@ -69,4 +69,4 @@ Starting from scratch, this challenge required writing code to do the following:
 
 ## Walkthrough Video
 * video walkthrough to show full capabilities of app:
-    - Click here: https://drive.google.com/file/d/1wFehtt0XUkfQXfDVKC2hUP5H0KcuKsB1/view
+    - Click here: https://drive.google.com/file/d/1gUJV8sb8AmwvVB58IEnCluxtTwOpJsbs/view
