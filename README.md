@@ -44,7 +44,7 @@ Starting from scratch, this challenge required writing code to do the following:
 * Node.js
 
 ## Installation
-* to install, clone the repository from GitHub, run the command 'npm i' while in the project directory, and then run 'node index' to launch the employee tracker within the terminal/command line
+* to install, clone the repository from GitHub, run the command 'npm i' while in the project directory, and then run 'node app' to launch the employee tracker within the terminal/command line.  if database does not exist, additionally please run schema.sql, and seeds.sql to populate data into the database.  this can be done in the terminal - using the command 'mysql -u root -p', and then entering the mysql password.  if your mysql username is not root, please substitute your username in that command.  within mysql, run 'source db/schema.sql' to run the schema, and to seed, run 'source db/seeds.sql'.  running 'node app' in terminal after should result in a populated database.
 
 ## Usage
 * this can be used to manage a company's employee database
@@ -58,14 +58,14 @@ Starting from scratch, this challenge required writing code to do the following:
 [Click here for more license info!](https://choosealicense.com/licenses/mit/)
 
 ## Tests
-* tests can be run by creating departments, roles, employees, and then viewing any entered data and updating if necessary
+* tests can be run by creating departments, roles, employees, and then viewing any entered data and updating if necessary.  a 'seeds.sql' will be included in the repository, which can be run populate the database with test data.
 
 ## Questions
 * any questions, please feel free to reach out via email to rdpodols@gmail.com
 
 ## Link to Project & Screenshot
 ![Employee Tracker Screenshot)](/assets/images/applicationImage1.png)
-[Click here to view the project!](https://rpodols.github.io/team-profile-generator/)
+[Click here to view the project!](https://rpodols.github.io/employee-tracker/)
 
 ## Walkthrough Video
 * video walkthrough to show full capabilities of app:

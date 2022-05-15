@@ -4,7 +4,8 @@ VALUES
   ("Front Office"),
   ("Back Office"),
   ("Admin"),
-  ("Engineer");
+  ("Engineer"),
+  ("Custodial");
 
 INSERT INTO roles (role_name, salary, dept) 
 VALUES
@@ -16,11 +17,13 @@ VALUES
 
 INSERT INTO employees (first_name, last_name, job_title, manager)
 VALUES
-  ("ryan", "podolski", 1, null),
-  ("piper", "doodlebear", 2, 1),
-  ("teddy", "bare", 1, 1),
-  ("sydney", "dunlap", 3, 2),
-  ("hershel", "choco", 4, 3),
-  ("josh", "murtz", 5, 4);
+  ("Ryan", "Podolski", 1, null),
+  ("Piper", "DoodleBear", 2, 1),
+  ("Teddy", "Bare", 1, 1),
+  ("Sydney", "Dunlap", 3, 2),
+  ("Hershel", "Choco", 4, 3),
+  ("Rusty", "Rabbit", 2, 3),
+  ("Hayley", "Danny", 2, 3),
+  ("Josh", "Murtz", 5, 4);
 
 

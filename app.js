@@ -40,7 +40,7 @@ const mainMenu = () => {
             type: 'list',
             name: 'mainMenu',
             message: 'Please choose an option below: ',
-            choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role', 'Delete an Employee', 'Update Employee Manager', 'Delete a Role', 'Delete a Department', 'Quit']
+            choices: ['View all Departments', 'View all Roles', 'View all Employees', 'Add a Department', 'Add a Role', 'Add an Employee', 'Update an Employee Role', 'Update Employee Manager', 'Delete an Employee', 'Delete a Role', 'Delete a Department', 'Quit']
         }
     ]).then((data) => {
         if (data.mainMenu === 'View all Departments') {
@@ -279,7 +279,7 @@ const updateEmployeeRole = () => {
         console.error(err);
     });
     });
-});
+    });
 };
 
 const deleteEmployee = () => {
